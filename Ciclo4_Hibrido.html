@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ciclo 4 — Híbrido 12 Semanas</title>
+<style>
+  :root {
+    --base: #3B82F6;
+    --base-dim: #1D4ED8;
+    --base-bg: #1e3a5f;
+    --consol: #F59E0B;
+    --consol-dim: #B45309;
+    --consol-bg: #3d2f0a;
+    --alvo: #EF4444;
+    --alvo-dim: #B91C1C;
+    --alvo-bg: #3d1010;
+    --bg: #0f0f13;
+    --card: #1a1a22;
+    --card2: #222230;
+    --border: #2e2e3e;
+    --text: #e8e8f0;
+    --text-dim: #8888aa;
+    --text-muted: #555570;
+    --accent: var(--base);
+    --accent-bg: var(--base-bg);
+    --piramide: #a78bfa;
+    --biset: #34d399;
+    --dropset: #fb923c;
+    --metarep: #22d3ee;
+    --superset: #f472b6;
+    --triset: #ef4444;
+    --volume: #94a3b8;
+    --ativacao: #60a5fa;
+    --finalizador: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    background: linear-gradient(135deg, #0f0f18 0%, #1a1040 50%, #0f0f18 100%);
+    padding: 24px 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 200px;
+    background: radial-gradient(ellipse, rgba(99,102,241,.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(99,102,241,.15);
+    border: 1px solid rgba(99,102,241,.35);
+    color: #a5b4fc;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .hero h1 span { color: #818cf8; }
+  .hero-sub {
+    margin-top: 6px;
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+  .hero-chips {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-chip {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── PHASE TABS ── */
+  .phase-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background: #111118;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .phase-tab {
+    padding: 10px 4px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .phase-tab.active-base   { color: var(--base);   border-color: var(--base);   background: rgba(59,130,246,.06); }
+  .phase-tab.active-consol { color: var(--consol); border-color: var(--consol); background: rgba(245,158,11,.06); }
+  .phase-tab.active-alvo   { color: var(--alvo);   border-color: var(--alvo);   background: rgba(239,68,68,.06); }
+  .phase-tab .wks { font-size: 9px; opacity: .7; margin-top: 2px; }
+
+  /* ── WEEK STRIP ── */
+  .week-strip {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 12px;
+    gap: 8px;
+    background: #111118;
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+  .week-strip::-webkit-scrollbar { display: none; }
+  .week-btn {
+    flex: 0 0 auto;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    position: relative;
+  }
+  .week-btn.active-base   { border-color: var(--base);   background: var(--base-bg);   color: #fff; box-shadow: 0 0 12px rgba(59,130,246,.4); }
+  .week-btn.active-consol { border-color: var(--consol); background: var(--consol-bg); color: #fff; box-shadow: 0 0 12px rgba(245,158,11,.4); }
+  .week-btn.active-alvo   { border-color: var(--alvo);   background: var(--alvo-bg);   color: #fff; box-shadow: 0 0 12px rgba(239,68,68,.4); }
+  .week-btn .deload-dot {
+    position: absolute;
+    top: -3px; right: -3px;
+    width: 8px; height: 8px;
+    background: #fbbf24;
+    border-radius: 50%;
+    border: 1px solid #0f0f13;
+  }
+
+  /* ── WORKOUT TABS ── */
+  .workout-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    margin: 12px 12px 0;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+  }
+  .workout-tab {
+    padding: 10px 4px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+  }
+  .workout-tab.active { color: #fff; }
+  .workout-tab.active-base   { border-color: var(--base);   background: rgba(59,130,246,.1); color: var(--base); }
+  .workout-tab.active-consol { border-color: var(--consol); background: rgba(245,158,11,.1); color: var(--consol); }
+  .workout-tab.active-alvo   { border-color: var(--alvo);   background: rgba(239,68,68,.1);  color: var(--alvo); }
+  .workout-tab.active-run    { border-color: #34d399;        background: rgba(52,211,153,.1);  color: #34d399; }
+  .workout-tab .tab-icon { font-size: 14px; display: block; margin-bottom: 2px; }
+
+  /* ── PHASE BANNER ── */
+  .phase-banner {
+    margin: 0 12px;
+    padding: 10px 14px;
+    border-left: 4px solid;
+    border-radius: 0 6px 6px 0;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,.03);
+  }
+  .phase-banner.base   { border-color: var(--base);   color: var(--base); }
+  .phase-banner.consol { border-color: var(--consol); color: var(--consol); }
+  .phase-banner.alvo   { border-color: var(--alvo);   color: var(--alvo); }
+  .phase-banner span { color: var(--text-dim); font-weight: 400; }
+
+  /* ── WARMUP SECTION ── */
+  .warmup-section {
+    margin: 10px 12px;
+    background: rgba(34,197,94,.06);
+    border: 1px solid rgba(34,197,94,.2);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .warmup-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #4ade80;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .warmup-items { list-style: none; }
+  .warmup-items li {
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 3px 0;
+    padding-left: 12px;
+    position: relative;
+  }
+  .warmup-items li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: #4ade80;
+    font-weight: 700;
+  }
+
+  /* ── RUN CARD ── */
+  .run-card {
+    margin: 10px 12px 0;
+    background: rgba(16,185,129,.06);
+    border: 1px solid rgba(16,185,129,.2);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .run-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(16,185,129,.08);
+    border-bottom: 1px solid rgba(16,185,129,.15);
+  }
+  .run-day-badge {
+    font-size: 10px;
+    font-weight: 800;
+    color: #34d399;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .run-tipo {
+    font-size: 10px;
+    font-weight: 700;
+    color: #6ee7b7;
+    background: rgba(52,211,153,.12);
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(52,211,153,.25);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .run-seq {
+    display: flex;
+    align-items: stretch;
+    padding: 10px 12px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .run-seq::-webkit-scrollbar { display: none; }
+  .run-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 44px;
+    flex: 1;
+  }
+  .run-block-sep {
+    display: flex;
+    align-items: center;
+    padding: 0 2px;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding-top: 14px;
+  }
+  .run-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+  }
+  .run-zone {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 6px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .run-zone.z1 { background: rgba(148,163,184,.15); color: #94a3b8; border: 1px solid rgba(148,163,184,.3); }
+  .run-zone.z2 { background: rgba(96,165,250,.15);  color: #60a5fa; border: 1px solid rgba(96,165,250,.3); }
+  .run-zone.z3 { background: rgba(52,211,153,.2);   color: #34d399; border: 1px solid rgba(52,211,153,.4); font-size: 14px; }
+  .run-zone.z4 { background: rgba(251,146,60,.2);   color: #fb923c; border: 1px solid rgba(251,146,60,.4); }
+  .run-time {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.2;
+  }
+  .run-descanso {
+    padding: 14px 12px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+  .run-prova {
+    padding: 12px;
+    text-align: center;
+  }
+  .run-prova-title { font-size: 15px; font-weight: 800; color: #fb923c; margin-bottom: 4px; }
+  .run-prova-sub { font-size: 11px; color: var(--text-dim); }
+
+  /* ── EXERCISE CARDS ── */
+  .exercises-container {
+    padding: 8px 12px 100px;
+  }
+  .bloco-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .bloco-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    background: var(--card2);
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .bloco-num {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    flex-shrink: 0;
+    letter-spacing: .5px;
+  }
+  .bloco-num.base   { background: rgba(59,130,246,.2);  color: var(--base); }
+  .bloco-num.consol { background: rgba(245,158,11,.2);  color: var(--consol); }
+  .bloco-num.alvo   { background: rgba(239,68,68,.2);   color: var(--alvo); }
+
+  .bloco-info { flex: 1; min-width: 0; }
+  .bloco-exercise {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bloco-meta {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .series-chip {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.1);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .method-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .m-piramide   { background: rgba(167,139,250,.15); color: var(--piramide);  border: 1px solid rgba(167,139,250,.3); }
+  .m-biset      { background: rgba(52,211,153,.15);  color: var(--biset);     border: 1px solid rgba(52,211,153,.3); }
+  .m-dropset    { background: rgba(251,146,60,.15);  color: var(--dropset);   border: 1px solid rgba(251,146,60,.3); }
+  .m-metarep    { background: rgba(34,211,238,.15);  color: var(--metarep);   border: 1px solid rgba(34,211,238,.3); }
+  .m-superset   { background: rgba(244,114,182,.15); color: var(--superset);  border: 1px solid rgba(244,114,182,.3); }
+  .m-triset     { background: rgba(239,68,68,.15);   color: var(--triset);    border: 1px solid rgba(239,68,68,.3); }
+  .m-volume     { background: rgba(148,163,184,.1);  color: var(--volume);    border: 1px solid rgba(148,163,184,.2); }
+  .m-ativacao   { background: rgba(96,165,250,.12);  color: var(--ativacao);  border: 1px solid rgba(96,165,250,.25); }
+  .m-finalizador{ background: rgba(251,191,36,.12);  color: var(--finalizador);border: 1px solid rgba(251,191,36,.25); }
+
+  .expand-icon {
+    color: var(--text-muted);
+    font-size: 16px;
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  .bloco-card.open .expand-icon { transform: rotate(180deg); }
+
+  .bloco-body {
+    display: none;
+    padding: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .bloco-card.open .bloco-body { display: block; }
+  .obs-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .obs-text {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .obs-text .warn { color: #fbbf24; }
+
+  /* Saturday run card */
+  .saturday-card {
+    background: rgba(16,185,129,.07);
+    border: 1px solid rgba(16,185,129,.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 8px 12px 100px;
+    text-align: center;
+  }
+  .saturday-icon { font-size: 32px; margin-bottom: 8px; }
+  .saturday-title { font-size: 16px; font-weight: 700; color: #34d399; }
+  .saturday-detail { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+  .saturday-tip { font-size: 11px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(16,185,129,.15); }
+
+  /* ── LEGEND ── */
+  .legend {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #111118;
+    border-top: 1px solid var(--border);
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    z-index: 50;
+  }
+  .legend::-webkit-scrollbar { display: none; }
+  .legend-item {
+    flex: 0 0 auto;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: .3px;
+  }
+
+  /* ── GUIDE SECTION ── */
+  .guide-toggle {
+    margin: 12px 12px 0;
+    background: rgba(99,102,241,.08);
+    border: 1px solid rgba(99,102,241,.2);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .guide-toggle-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #a5b4fc;
+    letter-spacing: .5px;
+  }
+  .guide-toggle-icon { color: #a5b4fc; font-size: 16px; transition: transform .2s; }
+  .guide-toggle.open .guide-toggle-icon { transform: rotate(180deg); }
+  .guide-content {
+    margin: 0 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 12px;
+    display: none;
+  }
+  .guide-content.open { display: block; }
+  .guide-exercise {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .guide-exercise:last-child { border-bottom: none; }
+  .guide-ex-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #c4b5fd;
+    margin-bottom: 4px;
+  }
+  .guide-ex-text {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── RUN VIEW ── */
+  .run-view {
+    padding: 8px 12px 100px;
+  }
+  .run-session-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #34d399;
+    padding: 12px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .run-session-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(52,211,153,.2);
+  }
+  .run-zones-ref {
+    margin-top: 14px;
+    padding: 12px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .run-zones-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .run-zones-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .run-zone-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .run-zone-pill {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  /* ── COMPLETION ── */
+  .done-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin: 16px 0 0;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid rgba(52,211,153,.3);
+    background: rgba(52,211,153,.07);
+    color: #34d399;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: .3px;
+  }
+  .done-btn:active { transform: scale(.97); }
+  .done-btn.is-done {
+    background: rgba(52,211,153,.18);
+    border-color: #34d399;
+    color: #fff;
+  }
+  .done-btn.is-done .done-icon { color: #34d399; }
+  .done-date {
+    font-size: 10px;
+    font-weight: 400;
+    opacity: .75;
+    margin-left: 4px;
+  }
+
+  .tab-check {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #34d399;
+    border-radius: 50%;
+    margin-left: 3px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .week-progress {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-top: 3px;
+  }
+  .week-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+  }
+  .week-dot.done { background: #34d399; }
+  .week-dot.done-run { background: #34d399; }
+
+  /* Utilities */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 12px 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚡ Rodrigo Vichiato</div>
+  <h1>Ciclo 4 — <span>Híbrido</span> 12 Semanas</h1>
+  <div class="hero-sub">Iniciado set/2026 · Metodologia BLOCO</div>
+  <div class="hero-chips">
+    <div class="hero-chip">🏋️ 4 dias/semana</div>
+    <div class="hero-chip">🏃 3 dias corrida</div>
+    <div class="hero-chip">💪 Push · Legs · Pull · Legs</div>
+  </div>
+</div>
+
+<!-- PHASE TABS -->
+<div class="phase-tabs">
+  <div class="phase-tab active-base" onclick="setPhase('base')" id="ptab-base">
+    BASE
+    <div class="wks">Sem 1–4</div>
+  </div>
+  <div class="phase-tab" onclick="setPhase('consol')" id="ptab-consol">
+    CONSOLIDAÇÃO
+    <div class="wks">Sem 5–8</div>
+  </div>
+  <div class="phase-tab" onclick="setPhase('alvo')" id="ptab-alvo">
+    ALVO
+    <div class="wks">Sem 9–12</div>
+  </div>
+</div>
+
+<!-- WEEK STRIP -->
+<div class="week-strip" id="weekStrip"></div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent"></div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item m-piramide">Pirâmide</div>
+  <div class="legend-item m-biset">Bi-set</div>
+  <div class="legend-item m-dropset">Drop-set</div>
+  <div class="legend-item m-metarep">Meta Rep</div>
+  <div class="legend-item m-superset">Super-set</div>
+  <div class="legend-item m-triset">Tri-set</div>
+  <div class="legend-item m-volume">Volume</div>
+  <div class="legend-item m-ativacao">Ativação</div>
+  <div class="legend-item m-finalizador">Finalizador</div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────
+
+const WARMUPS = {
+  A: ['Círculos pendulares (Pendulum) — 30s cada direção, cada braço','Rotação externa c/ Theraband leve — 2×15 cada lado','Band pull-apart — 2×15','Face pull leve — 2×15','Supino inclinado na máquina (40% da carga) — 1×15'],
+  B: ['5 min bike leve','Agachamento livre sem carga — 2×15','Glute bridge — 2×15','Leg swing frente/trás e lateral — 10 cada direção','Hack squat com carga leve (40%) — 1×15'],
+  C: ['Círculos pendulares (Pendulum) — 30s cada direção, cada braço','Rotação externa c/ Theraband leve — 2×15 cada lado','Band pull-apart — 2×15','Face pull leve — 2×15','Puxada supinada com carga leve (40%) — 1×15'],
+  D: ['5 min bike leve','Hip hinge sem carga (RDL corporal) — 2×15','Glute bridge — 2×15','Mesa flexora com carga leve (40%) — 1×15']
+};
+
+const GUIDE = {
+  A: [
+    {n:'Supino Inclinado Máquina Convergente', t:'Ajustar o assento para que os handles fiquem na linha do peito. Empurrar convergindo as mãos na frente — não abrir além da linha do ombro. O caminho fixo da máquina reduz a instabilidade no ombro. ⚠ Substitui o Supino Reto c/ Halteres.'},
+    {n:'Crossover Polia Baixa (bilateral)', t:'Polia fixada no piso. Passo lateral para criar ângulo. Cotovelo levemente flexionado. Arco de baixo para cima cruzando na frente do peito. Parar quando os braços atingirem a linha do ombro. Pausa de 1s na contração.'},
+    {n:'Voador Polia Alta', t:'Polia fixada acima da cabeça. Cotovelos semiflexionados durante todo o movimento. Arco amplo controlado de cima para baixo. Pausa de 1s no fechamento.'},
+    {n:'Rosca Direta Barra W', t:'Pegada na curvatura da barra W em semi-pronação — protege o tendão bicipital. Cotovelos fixos junto ao corpo durante todo o movimento. Excêntrica lenta de 3 segundos. Não balançar o tronco.'},
+    {n:'Flexão c/ Ponto Zero', t:'Mãos elevadas em suporte (banco ou step) — aumenta a amplitude além do zero. Descer até o peito tocar levemente. Subir sem trancar os cotovelos. Ir até a falha muscular real.'},
+    {n:'Flexão Diamante', t:'Mãos juntas formando um triângulo abaixo do peito. Cotovelos fechados junto ao corpo durante a descida. Corpo rígido do calcanhar ao pescoço. Ir até a falha.'},
+    {n:'Posterior de Ombros na Polia', t:'Polia fixada acima da cabeça. Puxar em arco para trás até o cotovelo ficar na linha do ombro — não forçar além. Pausa de 1s contraído. Carga muito leve. Polegar apontado levemente para cima.'},
+    {n:'Press Neutro c/ Halteres 80°', t:'Banco entre 75–80°. Palmas viradas uma para a outra (pegada neutra). Subir apenas até onde não há dor. ⚠ Máximo 80° para proteger o espaço subacromial. Carga conservadora.'},
+    {n:'Tríceps Polia Corda', t:'Corda na polia alta. Cotovelos fixos junto ao corpo — não deixar abrir. Extensão completa separando as pontas da corda no final. Retornar controlado.'},
+    {n:'Tríceps Coice no Pulley', t:'Polia baixa. Tronco inclinado, paralelo ao chão. Cotovelo fixo atrás — só o antebraço se move. Extensão completa. Excêntrica controlada de 2s.'}
+  ],
+  BD: [
+    {n:'Agachamento Goblet c/ Halter', t:'Halter segurado verticalmente na frente do peito. Pés na largura dos ombros, levemente abertos. Descer até 90° ou paralelo. Joelhos na direção dos pés. Core muito contraído. ⚠ Substitui o Agachamento Livre.'},
+    {n:'Hack Squat', t:'Apoio de ombros acolchoado e bem ajustado. Pés na largura dos ombros, levemente abertos. Descer até 90°. Não travar completamente os joelhos no topo.'},
+    {n:'Leg Press 45°', t:'Pés na largura dos quadris, posição média na plataforma. Descer até 90° de flexão de joelho. Não travar os joelhos no topo. Não levantar o quadril da cadeira.'},
+    {n:'Stiff c/ Halteres', t:'Halteres na pegada neutra descendo pela frente das pernas. Joelhos levemente flexionados e fixos. Quadril empurra para trás — não é flexão de coluna. Parar quando a coluna começar a arredondar. Core muito contraído. ⚠ Halteres nunca barra.'},
+    {n:'Mesa Flexora', t:'Eixo da máquina alinhado com o joelho. Quadril bem apoiado — não levantar. Excêntrica lenta de 3 segundos. Não usar impulso.'},
+    {n:'Cadeira Flexora', t:'Mesma execução da mesa flexora mas na posição sentada. Eixo alinhado com o joelho. Excêntrica de 3 segundos.'},
+    {n:'Cadeira Pélvica (Hip Thrust Máquina)', t:'Ajustar o suporte sobre o quadril (não sobre o abdômen). Empurrar para cima até o corpo ficar paralelo ao chão. Glúteo contraído no topo com pausa de 1s. Descida controlada.'},
+    {n:'Cadeira Extensora', t:'Eixo da máquina alinhado com o joelho. Extensão completa no topo com pausa de 1s. Excêntrica lenta de 2–3 segundos.'},
+    {n:'Abdução na Máquina', t:'Sentar com as costas apoiadas. Amplitude controlada — não forçar além do conforto. Excêntrica de 2–3 segundos. Não usar impulso.'},
+    {n:'Avanço c/ Halteres', t:'Halteres nas laterais do corpo. Passo à frente — pé dianteiro no chão, joelho traseiro desce quase até tocar. Tronco ereto durante todo o movimento.'},
+    {n:'Avanço Reverso c/ Halteres', t:'Igual ao avanço frontal mas o passo é para trás. Menos stress na articulação do joelho dianteiro. Tronco ereto.'},
+    {n:'Panturrilha', t:'Amplitude total — calcanhar bem abaixo do degrau no ponto mais baixo. Pausa de 1s no alongamento máximo. Subir até a ponta máxima. Não quicar.'}
+  ],
+  C: [
+    {n:'Pulldown Triângulo (pegada neutra)', t:'Handle triângulo (palmas voltadas uma para a outra). Puxar até o peito — não até o queixo. Escápula desce e retrai durante o movimento. Descida controlada de 2s. ⚠ Pegada neutra reduz impacto no labrum e ombro.'},
+    {n:'Remada Unilateral Máquina Iso-Lateral', t:'Peito apoiado no suporte frontal. Pegada neutra se disponível. Cotovelo puxa para trás rente ao corpo. Escápula retrai totalmente no final. Não compensar com rotação do tronco.'},
+    {n:'Remada no Pulley Sentado (Triângulo)', t:'Sentar ereto com leve curva natural na lombar. Triângulo puxado até o abdômen. Cotovelos passam rente ao corpo para trás. Escápula retrai no final. Excêntrica controlada de 2s.'},
+    {n:'Rosca Alternada c/ Halteres', t:'Iniciar com palma para dentro (neutra) e supinar no topo. Cotovelo fixo junto ao corpo. Excêntrica de 3 segundos. Não balancar o ombro.'},
+    {n:'Rosca Martelo c/ Halteres', t:'Pegada neutra durante todo o movimento — não supinar. Cotovelos fixos junto ao corpo. Trabalha bíceps braquial e braquiorradial. Excêntrica de 3 segundos.'},
+    {n:'Rosca Concentrada c/ Halteres', t:'Sentado, cotovelo apoiado na face interna da coxa. Supinação completa no topo. Movimento puro — sem ajuda do ombro ou tronco. Pausa de 1s contraído.'}
+  ]
+};
+
+// ─────────────────────────────────────────
+// WEEK WORKOUT DATA
+// ─────────────────────────────────────────
+
+const WEEKS = {
+  1: {
+    phase: 'base',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 1:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:14,z:'Z3',t:'1 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 2:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:10,z:'Z3',t:'2 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Intervalado 3:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:7, z:'Z3',t:'3 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×15',m:'Ativação',o:'Carga leve; assento alinhado à linha do peito'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'4×12-10-8-6',m:'Pirâmide',o:'↑ carga a cada série; convergir mãos na frente; não abrir além do ombro'},
+      {b:'03',e:'Crossover Polia Baixa (bilateral)',s:'3×12',m:'Volume',o:'Polia no piso; arco baixo→peito; cotovelo semiflexionado; pausa 1s na contração'},
+      {b:'04',e:'Tríceps Polia Corda + Flexão c/ Ponto Zero',s:'3×12 + falha',m:'Bi-set',o:'Cotovelos fixos; separar pontas no final / mãos elevadas; amplitude máxima'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'Meta: 45 reps na mesma carga; polia alta; cotovelo na linha do ombro'},
+      {b:'06',e:'Press Neutro c/ Halteres 80°',s:'3×12',m:'Volume',o:'Banco 75–80°; palmas neutras; parar antes do arco de dor; carga conservadora'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Tronco paralelo; cotovelo fixo atrás / cotovelos junto ao corpo; separar pontas'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'4×12-10-8-6',m:'Pirâmide',o:'Halter ao peito; descer até 90°; joelhos na direção dos pés; core contraído'},
+      {b:'02',e:'Leg Press 45°',s:'3×12',m:'Volume',o:'Pés na largura do quadril; descer até 90°; não travar joelhos no topo'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×12',m:'Volume',o:'Halteres neutros; quadril para trás; coluna neutra; parar antes de arredondar'},
+      {b:'04',e:'Mesa Flexora',s:'3×12',m:'Volume',o:'Eixo alinhado c/ joelho; quadril apoiado; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica',s:'3×12',m:'Volume',o:'Suporte sobre o quadril; empurrar até paralelo; pausa 1s; glúteo contraído'},
+      {b:'06',e:'Abdução na Máquina',s:'3×15',m:'Volume',o:'Amplitude controlada; excêntrica 2–3s; não forçar na abertura'},
+      {b:'07',e:'Panturrilha no Leg Press',s:'3×20',m:'Finalizador',o:'Amplitude total; pausa 1s no alongamento; movimento lento e controlado'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo (pegada neutra)',s:'2×15',m:'Ativação',o:'Carga leve; escápulas retraídas; descida controlada'},
+      {b:'02',e:'Pulldown Triângulo',s:'4×12-10-8-6',m:'Pirâmide',o:'↑ carga; puxar até o peito; escápula desce no movimento; não encolher ombros'},
+      {b:'03',e:'Remada Unilateral Máquina Iso-Lateral',s:'3×12 cada',m:'Volume',o:'Cotovelo rente ao corpo; escápula retrai no topo; cada lado separadamente'},
+      {b:'04',e:'Remada no Pulley Sentado (Triângulo)',s:'3×12',m:'Volume',o:'Sentar ereto; puxar até o abdômen; escápula retrai; excêntrica 2s'},
+      {b:'05',e:'Rosca Direta Barra W',s:'3×12',m:'Volume',o:'Pegada na curvatura (semi-pronação); cotovelos fixos; excêntrica 3s'},
+      {b:'06',e:'Rosca Alternada c/ Halteres',s:'3×12',m:'Volume',o:'Supinação no topo; cotovelo fixo junto ao corpo; excêntrica controlada'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'4×12-10-8-6',m:'Pirâmide',o:'Pés na largura dos ombros; descer até 90°; core contraído durante todo o movimento'},
+      {b:'02',e:'Leg Press 45° (pegada fechada)',s:'3×12',m:'Volume',o:'Pés mais juntos e levemente elevados na plataforma; enfatiza quadríceps internos'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×12',m:'Volume',o:'Halteres neutros; quadril para trás; coluna neutra; parar antes de arredondar'},
+      {b:'04',e:'Cadeira Flexora',s:'3×12',m:'Volume',o:'Eixo alinhado c/ joelho; quadril apoiado; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica',s:'3×12',m:'Volume',o:'Suporte sobre o quadril; pausa 1s no topo; glúteo contraído'},
+      {b:'06',e:'Abdução c/ Elástico em pé',s:'3×20',m:'Volume',o:'Abdução lateral controlada; não compensar com tronco; carga leve'},
+      {b:'07',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total; pausa 1s no alongamento; calcanhar abaixo do degrau'}
+    ]
+  },
+  2: {
+    phase: 'base',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 1:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:15,z:'Z3',t:'1 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 2:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:11,z:'Z3',t:'2 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Intervalado 3:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:8, z:'Z3',t:'3 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×15',m:'Ativação',o:'Carga leve; assento alinhado à linha do peito'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'4×12-10-8-6',m:'Pirâmide ↑',o:'↑ ~5% vs Sem 1; mesma técnica'},
+      {b:'03',e:'Crossover Polia Baixa',s:'3×12',m:'Volume',o:'Arco baixo→peito; pausa 1s na contração'},
+      {b:'04',e:'Tríceps Polia Corda + Flexão c/ Ponto Zero',s:'3×12 + falha',m:'Bi-set',o:'Sem pausa entre os dois; 90s entre blocos'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'Meta: 45 reps'},
+      {b:'06',e:'Press Neutro c/ Halteres 80°',s:'3×12',m:'Volume',o:'Palmas neutras; parar antes do arco de dor'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'4×12-10-8-6',m:'Pirâmide ↑',o:'↑ ~5% vs Sem 1; halter ao peito; 90°'},
+      {b:'02',e:'Leg Press 45°',s:'3×12',m:'Volume',o:'Não travar joelhos; descer até 90°'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×12',m:'Volume',o:'Quadril para trás; coluna neutra'},
+      {b:'04',e:'Mesa Flexora',s:'3×12',m:'Volume',o:'Excêntrica 3s; quadril apoiado'},
+      {b:'05',e:'Cadeira Pélvica',s:'3×12',m:'Volume',o:'Pausa 1s no topo; glúteo contraído'},
+      {b:'06',e:'Abdução na Máquina',s:'3×15',m:'Volume',o:'Excêntrica 2–3s'},
+      {b:'07',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total; pausa no alongamento'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×15',m:'Ativação',o:'Carga leve; escápulas retraídas'},
+      {b:'02',e:'Pulldown Triângulo',s:'4×12-10-8-6',m:'Pirâmide ↑',o:'↑ ~5% vs Sem 1; puxar até o peito'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'3×12 cada',m:'Volume',o:'Cotovelo rente ao corpo; cada lado separado'},
+      {b:'04',e:'Remada Pulley Sentado',s:'3×12',m:'Volume',o:'Puxar até o abdômen; excêntrica 2s'},
+      {b:'05',e:'Rosca Direta Barra W',s:'3×12',m:'Volume',o:'Cotovelos fixos; excêntrica 3s'},
+      {b:'06',e:'Rosca Alternada c/ Halteres',s:'3×12',m:'Volume',o:'Supinação no topo; cotovelo fixo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'4×12-10-8-6',m:'Pirâmide ↑',o:'↑ ~5% vs Sem 1; descer até 90°'},
+      {b:'02',e:'Leg Press (pegada fechada)',s:'3×12',m:'Volume',o:'Pés mais juntos e elevados na plataforma'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×12',m:'Volume',o:'Coluna neutra; quadril para trás'},
+      {b:'04',e:'Cadeira Flexora',s:'3×12',m:'Volume',o:'Excêntrica 3s; quadril apoiado'},
+      {b:'05',e:'Cadeira Pélvica',s:'3×12',m:'Volume',o:'Pausa 1s; glúteo contraído'},
+      {b:'06',e:'Abdução c/ Elástico',s:'3×20',m:'Volume',o:'Não compensar com tronco'},
+      {b:'07',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total; pausa no alongamento'}
+    ]
+  },
+  3: {
+    phase: 'base',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 1:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:16,z:'Z3',t:'1 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 2:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:12,z:'Z3',t:'2 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Intervalado 3:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:9, z:'Z3',t:'3 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×15',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'4×10-8-8-6',m:'Pirâmide ↑',o:'Mais peso, menos reps; pausa 90s'},
+      {b:'03',e:'Crossover Polia Baixa',s:'3×12',m:'Volume',o:'Arco baixo→peito; cotovelo semiflexionado'},
+      {b:'04',e:'Tríceps Polia Corda + Flexão c/ Ponto Zero',s:'3×12 + falha',m:'Bi-set',o:'Sem pausa entre os dois'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'45 reps na mesma carga'},
+      {b:'06',e:'Press Neutro c/ Halteres 80°',s:'4×12',m:'Volume',o:'+1 série vs Sem 2; palmas neutras'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'4×10-8-8-6',m:'Pirâmide ↑',o:'Mais peso; halter ao peito; 90°'},
+      {b:'02',e:'Leg Press 45°',s:'4×12',m:'Volume',o:'+1 série; não travar joelhos'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×10',m:'Volume',o:'Redução de reps; ↑ carga; coluna neutra'},
+      {b:'04',e:'Mesa Flexora',s:'3×12',m:'Volume',o:'Excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica',s:'4×12',m:'Volume',o:'+1 série; pausa 1s no topo'},
+      {b:'06',e:'Abdução na Máquina',s:'3×15',m:'Volume',o:'Excêntrica 2–3s'},
+      {b:'07',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'+1 série; amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×15',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'4×10-8-8-6',m:'Pirâmide ↑',o:'Mais peso; puxar até o peito'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'4×12 cada',m:'Volume',o:'+1 série; cotovelo rente ao corpo'},
+      {b:'04',e:'Remada Pulley Sentado',s:'3×12',m:'Volume',o:'Puxar até abdômen; excêntrica 2s'},
+      {b:'05',e:'Rosca Direta Barra W',s:'4×12',m:'Volume',o:'+1 série; cotovelos fixos; excêntrica 3s'},
+      {b:'06',e:'Rosca Alternada c/ Halteres',s:'3×12',m:'Volume',o:'Supinação no topo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'4×10-8-8-6',m:'Pirâmide ↑',o:'Mais peso; descer até 90°'},
+      {b:'02',e:'Leg Press (pegada fechada)',s:'4×12',m:'Volume',o:'+1 série'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×10',m:'Volume',o:'↑ carga; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'3×12',m:'Volume',o:'Excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica',s:'4×12',m:'Volume',o:'+1 série; pausa 1s'},
+      {b:'06',e:'Abdução c/ Elástico',s:'3×20',m:'Volume',o:'Controle total; não compensar'},
+      {b:'07',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'+1 série; amplitude total'}
+    ]
+  },
+  4: {
+    phase: 'base',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 1:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:14,z:'Z3',t:'1 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 2:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:10,z:'Z3',t:'2 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Intervalado 3:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:7, z:'Z3',t:'3 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×12',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'5×10-8-8-6-6',m:'Pirâmide Pico',o:'5ª série = carga máxima da fase Base'},
+      {b:'03',e:'Crossover Polia Baixa',s:'4×12',m:'Volume',o:'+1 série; arco baixo→peito'},
+      {b:'04',e:'Tríceps Polia Corda + Flexão c/ Ponto Zero',s:'4×12 + falha',m:'Bi-set',o:'+1 série; sem pausa entre os dois'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'4×15',m:'Meta Rep',o:'Meta: 60 reps totais'},
+      {b:'06',e:'Press Neutro c/ Halteres 80°',s:'4×10',m:'Volume',o:'↑ carga, ↓ reps vs Sem 3'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'5×10-8-8-6-6',m:'Pirâmide Pico',o:'5ª série = carga máxima da fase'},
+      {b:'02',e:'Leg Press 45°',s:'4×12',m:'Volume',o:'Pés na largura do quadril; 90°'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×10',m:'Volume',o:'+1 série; carga máxima da fase; coluna neutra'},
+      {b:'04',e:'Mesa Flexora',s:'4×12',m:'Volume',o:'+1 série; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica',s:'4×12',m:'Volume',o:'Pausa 1s; glúteo contraído'},
+      {b:'06',e:'Abdução na Máquina',s:'4×15',m:'Volume',o:'+1 série; excêntrica 2–3s'},
+      {b:'07',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total; pausa no alongamento'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×12',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'5×10-8-8-6-6',m:'Pirâmide Pico',o:'5ª série = carga máxima da fase'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'4×12 cada',m:'Volume',o:'Cotovelo rente; escápula retrai'},
+      {b:'04',e:'Remada Pulley Sentado',s:'4×12',m:'Volume',o:'+1 série; puxar até abdômen'},
+      {b:'05',e:'Rosca Direta Barra W',s:'4×12',m:'Volume',o:'Cotovelos fixos; excêntrica 3s'},
+      {b:'06',e:'Rosca Alternada c/ Halteres',s:'3×12',m:'Volume',o:'Supinação no topo; cotovelo fixo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'5×10-8-8-6-6',m:'Pirâmide Pico',o:'5ª série = carga máxima da fase'},
+      {b:'02',e:'Leg Press (pegada fechada)',s:'4×12',m:'Volume',o:'+1 série'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×10',m:'Volume',o:'+1 série; carga máxima da fase'},
+      {b:'04',e:'Cadeira Flexora',s:'4×12',m:'Volume',o:'+1 série; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica',s:'4×12',m:'Volume',o:'Pausa 1s no topo'},
+      {b:'06',e:'Abdução c/ Elástico',s:'4×20',m:'Volume',o:'+1 série; não compensar'},
+      {b:'07',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  5: {
+    phase: 'consol',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 4:2 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:5,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'2 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 4:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:6,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 20 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'20 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×15',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'5×10-8-6-6-4',m:'Pirâmide',o:'↑ carga a cada série; 5ª série pesada'},
+      {b:'03',e:'Voador Polia Alta',s:'3×12 + drop 30%',m:'Drop-set',o:'Cotovelos semiflexionados; arco amplo; drop imediato sem descanso'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão c/ Ponto Zero',s:'4×12 + falha',m:'Bi-set',o:'Sem pausa entre os dois; antagonista natural push/pull'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'Meta: 45 reps mesma carga; polia alta'},
+      {b:'06',e:'Tríceps Polia Corda',s:'4×12-10-8-6',m:'Pirâmide',o:'↑ carga; cotovelos fixos; separar pontas no final'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Tronco paralelo; cotovelo fixo / sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'5×10-8-6-6-4',m:'Pirâmide',o:'Halter ao peito; 90°; joelhos na direção dos pés'},
+      {b:'02',e:'Leg Press 45° + Cadeira Extensora',s:'4×12 + 4×15',m:'Bi-set',o:'Sem pausa entre os dois; 90s entre blocos'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×10 + drop 20%',m:'Drop-set',o:'Quadril para trás; coluna neutra; drop imediato'},
+      {b:'04',e:'Cadeira Flexora',s:'3×15',m:'Meta Rep',o:'Meta: 45 reps; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×12 + 4×15',m:'Super-set',o:'Pausa 1s no topo / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total; pausa no alongamento'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×15',m:'Ativação',o:'Carga leve; escápulas retraídas'},
+      {b:'02',e:'Pulldown Triângulo',s:'5×10-8-6-6-4',m:'Pirâmide',o:'↑ carga; puxar até o peito; não encolher ombros'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'3×12 cada',m:'Meta Rep',o:'Meta: 36 reps/lado; cotovelo rente ao corpo'},
+      {b:'04',e:'Remada Pulley Sentado + Rosca Direta Barra W',s:'4×12',m:'Bi-set',o:'Puxar até abdômen / cotovelos fixos; excêntrica 3s'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×10 + drop 20%',m:'Drop-set',o:'Supinação no topo; drop imediato sem descanso'},
+      {b:'06',e:'Rosca Martelo',s:'3×12',m:'Meta Rep',o:'Pegada neutra; cotovelo fixo; trabalha braquial'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'5×10-8-6-6-4',m:'Pirâmide',o:'↑ carga; descer até 90°'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral',s:'4×12 + 4×12',m:'Bi-set',o:'Pés juntos / extensão completa; pausa 1s no topo'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×10 + drop 20%',m:'Drop-set',o:'Coluna neutra; drop imediato'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico em pé',s:'4×12 + 4×20',m:'Super-set',o:'Pausa 1s no topo / não compensar com tronco'},
+      {b:'05',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  6: {
+    phase: 'consol',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 4:2 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:6,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'2 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 4:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:7,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 22 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'22 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×15',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'5×10-8-6-6-4',m:'Pirâmide ↑',o:'↑ carga vs Sem 5; mesma técnica'},
+      {b:'03',e:'Voador Polia Alta',s:'4×12 + drop 30%',m:'Drop-set',o:'+1 série vs Sem 5; cotovelos semiflexionados'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão c/ Ponto Zero',s:'4×12 + falha',m:'Bi-set',o:'Sem pausa entre os dois'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'45 reps; ↑ carga vs Sem 5'},
+      {b:'06',e:'Tríceps Polia Corda',s:'4×12-10-8-6',m:'Pirâmide',o:'↑ carga; cotovelos fixos'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'5×10-8-6-6-4',m:'Pirâmide ↑',o:'↑ carga vs Sem 5; 90°'},
+      {b:'02',e:'Leg Press + Cadeira Extensora',s:'4×12 + 4×15',m:'Bi-set',o:'Sem pausa; 90s entre blocos'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×10 + drop 20%',m:'Drop-set',o:'↑ carga vs Sem 5; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'3×15',m:'Meta Rep',o:'45 reps; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×12 + 4×15',m:'Super-set',o:'Pausa 1s / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×15',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'5×10-8-6-6-4',m:'Pirâmide ↑',o:'↑ carga vs Sem 5'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'3×12 cada',m:'Meta Rep',o:'36 reps/lado; ↑ carga'},
+      {b:'04',e:'Remada Pulley Sentado + Rosca Direta Barra W',s:'4×12',m:'Bi-set',o:'Puxar até abdômen / cotovelos fixos'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×10 + drop 20%',m:'Drop-set',o:'Supinação no topo; drop imediato'},
+      {b:'06',e:'Rosca Martelo',s:'3×12',m:'Meta Rep',o:'Pegada neutra; cotovelo fixo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'5×10-8-6-6-4',m:'Pirâmide ↑',o:'↑ carga vs Sem 5'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral',s:'4×12 + 4×12',m:'Bi-set',o:'Extensão completa; pausa 1s no topo'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×10 + drop 20%',m:'Drop-set',o:'↑ carga; coluna neutra'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'4×12 + 4×20',m:'Super-set',o:'Pausa 1s / não compensar com tronco'},
+      {b:'05',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  7: {
+    phase: 'consol',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 4:2 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:7,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'2 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 4:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:8,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 24 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'24 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×12',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'5×8-6-5-4-3',m:'Pirâmide Intensiva',o:'Foco em carga; menos reps, mais peso'},
+      {b:'03',e:'Voador Polia Alta',s:'4×10 + drop 30% + drop 20%',m:'Drop-set duplo',o:'Duas quedas de carga; busca falha muscular'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão c/ Ponto Zero',s:'4×10 + falha',m:'Bi-set',o:'↑ carga na rosca; sem pausa'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'4×12',m:'Meta Rep',o:'Meta: 48 reps; carga ↑ vs Sem 6'},
+      {b:'06',e:'Tríceps Polia Corda',s:'4×6-8-10-12',m:'Pirâmide Inversa',o:'Começa pesado; alivia progressivamente'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×10 + 3×12',m:'Super-set',o:'Tronco paralelo; sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'5×8-6-5-4-3',m:'Pirâmide Intensiva',o:'Foco em carga máxima; 90°'},
+      {b:'02',e:'Leg Press + Cadeira Extensora',s:'4×10 + 4×12',m:'Bi-set',o:'↓ reps, ↑ carga; sem pausa'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×8 + drop 20% + drop 20%',m:'Drop-set duplo',o:'↑ carga; duas quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'4×12',m:'Meta Rep',o:'Meta: 48 reps; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×10 + 4×15',m:'Super-set',o:'↑ carga cadeira pélvica / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×12',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'5×8-6-5-4-3',m:'Pirâmide Intensiva',o:'Foco em carga máxima'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'4×10 cada',m:'Meta Rep',o:'Meta: 40 reps/lado; ↑ carga'},
+      {b:'04',e:'Remada Pulley Sentado + Rosca Direta Barra W',s:'4×10',m:'Bi-set',o:'↑ carga; puxar até abdômen / excêntrica 3s'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×8 + drop 20% + drop 20%',m:'Drop-set duplo',o:'↑ carga; duas quedas'},
+      {b:'06',e:'Rosca Martelo',s:'3×12',m:'Meta Rep',o:'Pegada neutra; cotovelo fixo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'5×8-6-5-4-3',m:'Pirâmide Intensiva',o:'Foco em carga máxima; 90°'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral',s:'4×10 + 4×10',m:'Bi-set',o:'↑ carga; sem pausa'},
+      {b:'03',e:'Stiff c/ Halteres',s:'4×8 + drop 20% + drop 20%',m:'Drop-set duplo',o:'Duas quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'4×12 + 4×20',m:'Super-set',o:'Pausa 1s / não compensar'},
+      {b:'05',e:'Panturrilha',s:'4×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  8: {
+    phase: 'consol',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 4:2 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:5,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'2 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 4:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:6,z:'Z3',t:'4 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 20 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'20 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×12',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'4×6-4-4-6',m:'Pirâmide + Repeat',o:'Sobe ao pico (séries 2–3) e desce com volume; consolida padrão'},
+      {b:'03',e:'Voador Polia Alta',s:'3×10 + drop 30% + drop 20%',m:'Drop-set duplo',o:'Cotovelos semiflexionados; arco amplo'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão c/ Ponto Zero',s:'4×12 + falha',m:'Bi-set',o:'Volume moderado; qualidade de movimento'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'Meta: 45 reps; carga moderada'},
+      {b:'06',e:'Tríceps Polia Corda',s:'4×12-10-8-6',m:'Pirâmide',o:'Volta ao volume; cotovelos fixos'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'4×6-4-4-6',m:'Pirâmide + Repeat',o:'Pico nas séries 2–3; volta ao volume na 4ª'},
+      {b:'02',e:'Leg Press + Cadeira Extensora',s:'4×12 + 4×15',m:'Volume',o:'Volta ao volume; sem pausa entre os dois'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×10 + drop 20% + drop 20%',m:'Drop-set duplo',o:'Duas quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'3×15',m:'Meta Rep',o:'45 reps; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×12 + 4×15',m:'Super-set',o:'Pausa 1s / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×12',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'4×6-4-4-6',m:'Pirâmide + Repeat',o:'Pico nas séries 2–3; volta ao volume'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'3×12 cada',m:'Volume',o:'Cotovelo rente; escápula retrai'},
+      {b:'04',e:'Remada Pulley Sentado + Rosca Direta Barra W',s:'4×12',m:'Volume',o:'Puxar até abdômen / cotovelos fixos'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×10 + drop 20% + drop 20%',m:'Drop-set duplo',o:'Duas quedas; supinação no topo'},
+      {b:'06',e:'Rosca Martelo',s:'3×12',m:'Volume',o:'Pegada neutra; cotovelo fixo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'4×6-4-4-6',m:'Pirâmide + Repeat',o:'Pico nas séries 2–3; volta ao volume'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral',s:'4×12 + 4×12',m:'Volume',o:'Extensão completa; pausa 1s no topo'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×10 + drop 20% + drop 20%',m:'Drop-set duplo',o:'Duas quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'4×12 + 4×20',m:'Super-set',o:'Pausa 1s / não compensar com tronco'},
+      {b:'05',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  9: {
+    phase: 'alvo',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 5:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:6,z:'Z3',t:'5 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 6:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:6,z:'Z3',t:'6 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 22 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'22 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Carga máxima absoluta na série de 2; 6ª série = recorde do ciclo'},
+      {b:'03',e:'Voador + Crossover Polia Baixa + Flexão Ponto Zero',s:'3×12 + 3×12 + falha',m:'Tri-set',o:'Sem pausa entre os 3; exaustão total de peito'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão Diamante',s:'4×10 + falha',m:'Bi-set',o:'Cotovelos fixos; excêntrica 3s / cotovelos fechados'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'4×15',m:'Meta Rep',o:'Meta: 60 reps; carga ↑ vs fase anterior'},
+      {b:'06',e:'Tríceps Polia Corda',s:'3×10 + drop 25% + drop 25%',m:'Drop-set duplo',o:'Cotovelos fixos; duas quedas; busca falha'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×10 + 3×12',m:'Super-set',o:'Tronco paralelo; sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Carga máxima na série de 2; halter ao peito; 90°'},
+      {b:'02',e:'Leg Press + Cadeira Ext. + Avanço c/ Halteres',s:'3×12 + 3×15 + 3×10',m:'Tri-set',o:'Sem pausa; exaustão de quadríceps / tronco ereto no avanço'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×8 + drop 20% + drop 20%',m:'Drop-set duplo',o:'↑ carga; coluna neutra; duas quedas'},
+      {b:'04',e:'Cadeira Flexora',s:'4×12',m:'Meta Rep',o:'Meta: 48 reps; excêntrica 3s; carga máxima da fase'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×10 + 4×15',m:'Super-set',o:'Pausa 1s glúteo / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'5×20',m:'Finalizador',o:'+1 série vs Etapa anterior; amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Carga máxima na série de 2; puxar até o peito'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'4×10 cada',m:'Meta Rep',o:'Meta: 40 reps/lado; ↑ carga vs Consolidação'},
+      {b:'04',e:'Remada Pulley + Rosca Barra W + Rosca Martelo',s:'3×12 + 3×10 + 3×12',m:'Tri-set',o:'Sem pausa; puxar até abdômen / cotovelos fixos / pegada neutra'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×8 + drop 20% + drop 20%',m:'Drop-set duplo',o:'Supinação no topo; duas quedas'},
+      {b:'06',e:'Rosca Concentrada',s:'3×12 cada',m:'Meta Rep',o:'Cotovelo apoiado na coxa; contração máxima no topo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Carga máxima na série de 2; 90°'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral + Avanço Reverso',s:'3×12 + 3×12 + 3×10',m:'Tri-set',o:'Sem pausa; extensão completa / passo para trás; tronco ereto'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×8 + drop 20% + drop 20%',m:'Drop-set duplo',o:'Coluna neutra; duas quedas'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'4×12 + 4×20',m:'Super-set',o:'Pausa 1s / não compensar com tronco'},
+      {b:'05',e:'Panturrilha',s:'5×20',m:'Finalizador',o:'Amplitude total; pausa no alongamento'}
+    ]
+  },
+  10: {
+    phase: 'alvo',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 5:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:7,z:'Z3',t:'5 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 6:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:7,z:'Z3',t:'6 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 24 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'24 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Pausa 2s no fechamento nas séries 5 e 6; ↑ carga vs Sem 9'},
+      {b:'03',e:'Voador + Crossover Polia Baixa + Flexão Ponto Zero',s:'4×12 + 4×12 + falha',m:'Tri-set',o:'+1 série vs Sem 9; sem pausa entre os 3'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão Diamante',s:'4×10 + falha',m:'Bi-set',o:'↑ carga na rosca; cotovelos fixos'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'4×15',m:'Meta Rep',o:'60 reps; ↑ carga vs Sem 9'},
+      {b:'06',e:'Tríceps Polia Corda',s:'3×10 + drop 25% + drop 20% + drop 15%',m:'Drop-set triplo',o:'Três quedas progressivas; cotovelos fixos'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×10 + 3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Pausa 2s no fundo nas séries 5 e 6; ↑ carga'},
+      {b:'02',e:'Leg Press + Cadeira Ext. + Avanço',s:'4×10 + 4×12 + 4×10',m:'Tri-set',o:'+1 série; sem pausa entre os 3'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×8 + drop 20% + drop 20% + drop 15%',m:'Drop-set triplo',o:'Três quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'4×12',m:'Meta Rep',o:'↑ carga vs Sem 9; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×10 + 4×15',m:'Super-set',o:'Pausa 1s / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'5×20',m:'Finalizador',o:'Amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Pausa 2s c/ escápulas retraídas nas séries 5 e 6'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'4×10 cada',m:'Meta Rep',o:'↑ carga vs Sem 9'},
+      {b:'04',e:'Remada Pulley + Rosca Barra W + Rosca Martelo',s:'4×10 + 4×10 + 4×12',m:'Tri-set',o:'+1 série; sem pausa'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×8 + drop 20% + drop 20% + drop 15%',m:'Drop-set triplo',o:'Três quedas; supinação no topo'},
+      {b:'06',e:'Rosca Concentrada',s:'3×12 cada',m:'Meta Rep',o:'Cotovelo apoiado; contração máxima'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'6×12-10-8-6-4-2',m:'Super Pirâmide',o:'Pausa 2s no fundo nas séries 5 e 6'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral + Avanço Reverso',s:'4×10 + 4×10 + 4×10',m:'Tri-set',o:'+1 série; sem pausa'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×8 + drop 20% + drop 20% + drop 15%',m:'Drop-set triplo',o:'Três quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'4×12 + 4×20',m:'Super-set',o:'Pausa 1s / não compensar'},
+      {b:'05',e:'Panturrilha',s:'5×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  11: {
+    phase: 'alvo',
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 5:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:8,z:'Z3',t:'5 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Intervalado 6:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:8,z:'Z3',t:'6 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runSat:{dia:'Sábado',   tipo:'Contínuo 26 min Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z3',t:'26 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'6×10-8-6-4-2-1',m:'Pirâmide Máxima',o:'Série de 1 = carga máxima absoluta do ciclo'},
+      {b:'03',e:'Voador (pausa 1s) + Crossover + Flexão Ponto Zero',s:'4×10 + 4×10 + falha',m:'Tri-set c/ Pausa',o:'Pausa 1s no fechamento do Voador; sem pausa entre os 3'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão Diamante',s:'4×8 + falha',m:'Bi-set',o:'↑ carga rosca; cotovelos fixos'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'4×15',m:'Meta Rep',o:'60 reps; carga máxima do ciclo'},
+      {b:'06',e:'Tríceps Polia Corda',s:'3×8 + drop 25% + drop 20% + drop 15%',m:'Drop-set triplo',o:'↑ carga vs Sem 10; três quedas'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×10 + 3×12',m:'Super-set',o:'Sequência sem pausa'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'6×10-8-6-4-2-1',m:'Pirâmide Máxima',o:'Carga máxima absoluta do ciclo na série de 1'},
+      {b:'02',e:'Leg Press (pausa 1s) + Cadeira Ext. + Avanço',s:'4×8 + 4×10 + 4×10',m:'Tri-set c/ Pausa',o:'Pausa 1s no Leg Press; sem pausa entre os 3'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×6 + drop 20% + drop 20% + drop 15%',m:'Drop-set triplo',o:'↑ carga; três quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'4×10',m:'Meta Rep',o:'Carga máxima; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'4×10 + 4×15',m:'Super-set',o:'Pausa 1s / excêntrica 2–3s'},
+      {b:'06',e:'Panturrilha',s:'5×20',m:'Finalizador',o:'Amplitude total'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'6×10-8-6-4-2-1',m:'Pirâmide Máxima',o:'Carga máxima do ciclo; puxar até o peito'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'4×8 cada',m:'Meta Rep',o:'Carga máxima; cotovelo rente ao corpo'},
+      {b:'04',e:'Remada Pulley (pausa 1s) + Rosca Barra W + Rosca Martelo',s:'4×8 + 4×8 + 4×10',m:'Tri-set c/ Pausa',o:'Pausa 1s c/ escápulas retraídas / cotovelos fixos / pegada neutra'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×6 + drop 20% + drop 20% + drop 15%',m:'Drop-set triplo',o:'↑ carga; três quedas; supinação no topo'},
+      {b:'06',e:'Rosca Concentrada',s:'3×10 cada',m:'Meta Rep',o:'Cotovelo apoiado; carga máxima do ciclo'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'6×10-8-6-4-2-1',m:'Pirâmide Máxima',o:'Carga máxima do ciclo na série de 1'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral + Avanço Reverso',s:'4×8 + 4×8 + 4×10',m:'Tri-set c/ Pausa',o:'Pausa 1s no Leg Press / extensão completa / passo para trás'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×6 + drop 20% + drop 20% + drop 15%',m:'Drop-set triplo',o:'Carga máxima; três quedas; coluna neutra'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'4×10 + 4×20',m:'Super-set',o:'Pausa 1s / não compensar com tronco'},
+      {b:'05',e:'Panturrilha',s:'5×20',m:'Finalizador',o:'Amplitude total'}
+    ]
+  },
+  12: {
+    phase: 'alvo',
+    deload: true,
+    runA:  {dia:'3ª Feira', tipo:'Intervalado 5:1 Moderado', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:6,z:'Z3',t:'5 MIN'},{n:1,z:'Z1',t:'1 MIN'},{n:1,z:'Z1',t:'5 MIN'}]},
+    runC:  {dia:'5ª Feira', tipo:'Descanso', seq:[], descanso:true},
+    runSat:{dia:'Domingo',  tipo:'🏆 PROVA ALVO — 5KM', seq:[{n:1,z:'Z1',t:'5 MIN'},{n:1,z:'Z4',t:'5 KM'},{n:1,z:'Z1',t:'5 MIN'}], prova:true},
+    A: [
+      {b:'01',e:'Supino Inclinado Máquina Convergente',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Supino Inclinado Máquina Convergente',s:'4×10-8-6-8',m:'Pirâmide Deload',o:'−15% da carga pico Sem 11; foco em qualidade de movimento'},
+      {b:'03',e:'Voador + Crossover + Flexão Ponto Zero',s:'3×12 + 3×12 + falha',m:'Tri-set',o:'Volume moderado; ritmo controlado; sem pressa'},
+      {b:'04',e:'Rosca Direta Barra W + Flexão Diamante',s:'3×12 + falha',m:'Bi-set',o:'Carga moderada; sem forçar'},
+      {b:'05',e:'Posterior de Ombros na Polia',s:'3×15',m:'Meta Rep',o:'45 reps; carga confortável'},
+      {b:'06',e:'Tríceps Polia Corda',s:'3×15',m:'Volume Leve',o:'Carga moderada; foco em execução'},
+      {b:'07',e:'Tríceps Coice Pulley + Tríceps Polia Corda',s:'3×12 + 3×15',m:'Super-set',o:'Sequência controlada'}
+    ],
+    B: [
+      {b:'01',e:'Agachamento Goblet c/ Halter',s:'4×10-8-6-8',m:'Pirâmide Deload',o:'−15% da carga pico; foco em técnica'},
+      {b:'02',e:'Leg Press + Cadeira Extensora',s:'3×12 + 3×15',m:'Volume Controlado',o:'Sem forçar; 90° no Leg Press'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×12',m:'Sem drop-set',o:'Carga moderada; coluna neutra'},
+      {b:'04',e:'Cadeira Flexora',s:'3×15',m:'Meta Rep',o:'45 reps; excêntrica 3s'},
+      {b:'05',e:'Cadeira Pélvica + Abdução Máquina',s:'3×12 + 3×15',m:'Super-set',o:'Pausa 1s / excêntrica controlada'},
+      {b:'06',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total; ritmo lento'}
+    ],
+    C: [
+      {b:'01',e:'Pulldown Triângulo',s:'2×10',m:'Ativação',o:'Carga leve'},
+      {b:'02',e:'Pulldown Triângulo',s:'4×10-8-6-8',m:'Pirâmide Deload',o:'−15% carga pico; escápulas retraídas'},
+      {b:'03',e:'Remada Unilateral Máquina',s:'3×12 cada',m:'Volume Controlado',o:'Carga moderada; cotovelo rente'},
+      {b:'04',e:'Remada Pulley Sentado + Rosca Direta Barra W',s:'3×12',m:'Volume Controlado',o:'Puxar até abdômen / cotovelos fixos'},
+      {b:'05',e:'Rosca Alternada c/ Halteres',s:'3×12',m:'Sem drop-set',o:'Supinação no topo; ritmo controlado'},
+      {b:'06',e:'Rosca Concentrada',s:'3×12 cada',m:'Finalizador',o:'Contração máxima; carga confortável'}
+    ],
+    D: [
+      {b:'01',e:'Hack Squat',s:'4×10-8-6-8',m:'Pirâmide Deload',o:'−15% carga pico; foco em técnica'},
+      {b:'02',e:'Leg Press (fechada) + Cadeira Ext. Unilateral',s:'3×12 + 3×12',m:'Volume Controlado',o:'Sem forçar; extensão completa'},
+      {b:'03',e:'Stiff c/ Halteres',s:'3×12',m:'Sem drop-set',o:'Coluna neutra; ritmo controlado'},
+      {b:'04',e:'Cadeira Pélvica + Abdução Elástico',s:'3×12 + 3×20',m:'Super-set',o:'Pausa 1s / movimento controlado'},
+      {b:'05',e:'Panturrilha',s:'3×20',m:'Finalizador',o:'Amplitude total; pausa no alongamento'}
+    ]
+  }
+};
+
+// ─────────────────────────────────────────
+// STORAGE — completions
+// ─────────────────────────────────────────
+function getCompletions() {
+  try { return JSON.parse(localStorage.getItem('ciclo4_completions') || '{}'); }
+  catch { return {}; }
+}
+function saveCompletions(data) {
+  try { localStorage.setItem('ciclo4_completions', JSON.stringify(data)); }
+  catch {}
+}
+function toggleComplete(week, workout) {
+  const data = getCompletions();
+  const key = `${week}_${workout}`;
+  if (data[key]) {
+    delete data[key];
+  } else {
+    const now = new Date();
+    data[key] = now.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'});
+  }
+  saveCompletions(data);
+  renderAll();
+}
+function isDone(week, workout) {
+  return !!getCompletions()[`${week}_${workout}`];
+}
+function getDoneDate(week, workout) {
+  return getCompletions()[`${week}_${workout}`] || null;
+}
+
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+let currentPhase = 'base';
+let currentWeek = 1;
+let currentWorkout = 'A';
+
+// ─────────────────────────────────────────
+// METHOD → CSS CLASS
+// ─────────────────────────────────────────
+function methodClass(m) {
+  const ml = m.toLowerCase();
+  if (ml.includes('tri-set') || ml.includes('triset')) return 'm-triset';
+  if (ml.includes('bi-set') || ml.includes('biset')) return 'm-biset';
+  if (ml.includes('drop')) return 'm-dropset';
+  if (ml.includes('super')) return 'm-superset';
+  if (ml.includes('meta')) return 'm-metarep';
+  if (ml.includes('pirâmide') || ml.includes('piramide')) return 'm-piramide';
+  if (ml.includes('ativação') || ml.includes('ativacao')) return 'm-ativacao';
+  if (ml.includes('finalizador')) return 'm-finalizador';
+  return 'm-volume';
+}
+
+// ─────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────
+function setPhase(phase) {
+  currentPhase = phase;
+  const firstWeeks = { base: 1, consol: 5, alvo: 9 };
+  currentWeek = firstWeeks[phase];
+  currentWorkout = 'A';
+  renderAll();
+}
+
+function setWeek(w) {
+  currentWeek = w;
+  currentWorkout = 'A';
+  renderAll();
+}
+
+function setWorkout(w) {
+  currentWorkout = w;
+  renderWorkout();
+}
+
+function renderAll() {
+  renderPhaseTabs();
+  renderWeekStrip();
+  renderMain();
+}
+
+function renderPhaseTabs() {
+  ['base','consol','alvo'].forEach(p => {
+    const el = document.getElementById('ptab-' + p);
+    el.className = 'phase-tab' + (currentPhase === p ? ' active-' + p : '');
+  });
+}
+
+function renderWeekStrip() {
+  const strip = document.getElementById('weekStrip');
+  const ranges = { base: [1,2,3,4], consol: [5,6,7,8], alvo: [9,10,11,12] };
+  const weeks = ranges[currentPhase];
+  strip.innerHTML = weeks.map(w => {
+    const wk = WEEKS[w];
+    const isActive = w === currentWeek;
+    const cls = isActive ? 'week-btn active-' + wk.phase : 'week-btn';
+    const deload = wk.deload ? '<div class="deload-dot" title="Deload"></div>' : '';
+    const dots = ['A','B','C','D','R'].map(k =>
+      `<div class="week-dot${isDone(w,k) ? ' done' : ''}"></div>`
+    ).join('');
+    return `<div class="${cls}" onclick="setWeek(${w})">
+      ${w}${deload}
+      <div class="week-progress">${dots}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderMain() {
+  const wk = WEEKS[currentWeek];
+  const phase = wk.phase;
+  const phaseLabels = { base: '🔵 Etapa Base — Adaptação e Volume', consol: '🟡 Etapa Consolidação — Intensidade e Métodos Avançados', alvo: '🔴 Etapa Alvo — Pico de Performance' };
+  const deloadNote = wk.deload ? ' · ⭐ DELOAD — carga −15%' : '';
+
+  const workouts = [
+    { key: 'A', icon: '💪', label: 'PUSH' },
+    { key: 'B', icon: '🦵', label: 'LEGS' },
+    { key: 'C', icon: '🔙', label: 'PULL' },
+    { key: 'D', icon: '🍑', label: 'LEGS+' },
+    { key: 'R', icon: '🏃', label: 'CORRIDA' }
+  ];
+
+  let html = `
+    <div class="phase-banner ${phase}" style="margin-top:12px">
+      ${phaseLabels[phase]}<span>${deloadNote}</span>
+    </div>
+    <div class="workout-tabs">
+      ${workouts.map(w => `
+        <div class="workout-tab ${currentWorkout === w.key ? 'active active-' + phase : ''}" onclick="setWorkout('${w.key}')">
+          <span class="tab-icon">${w.icon}</span>${w.label}
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+  renderWorkout();
+}
+
+function renderWorkout() {
+  // Update tab active states
+  const wk = WEEKS[currentWeek];
+  const phase = wk.phase;
+  document.querySelectorAll('.workout-tab').forEach((el, i) => {
+    const keys = ['A','B','C','D','R'];
+    const key = keys[i];
+    const isRun = key === 'R';
+    const isActive = key === currentWorkout;
+    const done = isDone(currentWeek, key);
+    el.className = 'workout-tab' + (isActive ? (isRun ? ' active active-run' : ' active active-' + phase) : '');
+    // add/remove check dot
+    const existing = el.querySelector('.tab-check');
+    if (existing) existing.remove();
+    if (done) {
+      const dot = document.createElement('span');
+      dot.className = 'tab-check';
+      dot.title = 'Concluído';
+      el.appendChild(dot);
+    }
+  });
+
+  // ── CORRIDA TAB ──
+  if (currentWorkout === 'R') {
+    renderRunView(wk, phase);
+    return;
+  }
+
+  const exercises = wk[currentWorkout];
+  const warmupItems = WARMUPS[currentWorkout] || WARMUPS['A'];
+
+  // No run cards inside workout tabs
+  const hasRun = false;
+  const runData = null;
+
+  // Guide for this workout
+  const guideData = currentWorkout === 'C' ? GUIDE.C : (currentWorkout === 'A' ? GUIDE.A : GUIDE.BD);
+  const guideHTML = guideData.map(g => `
+    <div class="guide-exercise">
+      <div class="guide-ex-name">📌 ${g.n}</div>
+      <div class="guide-ex-text">${g.t.replace('⚠', '<span class="warn">⚠</span>')}</div>
+    </div>
+  `).join('');
+
+  const satNote = '';
+
+  // Exercise cards
+  const cardsHTML = exercises.map((ex, idx) => {
+    const mc = methodClass(ex.m);
+    const obsFormatted = ex.o.replace(/⚠/g, '<span class="warn">⚠</span>');
+    return `
+      <div class="bloco-card" id="card-${idx}">
+        <div class="bloco-header" onclick="toggleCard(${idx})">
+          <div class="bloco-num ${phase}">B${ex.b}</div>
+          <div class="bloco-info">
+            <div class="bloco-exercise">${ex.e}</div>
+            <div class="bloco-meta">
+              <span class="series-chip">${ex.s}</span>
+              <span class="method-badge ${mc}">${ex.m}</span>
+            </div>
+          </div>
+          <div class="expand-icon">▾</div>
+        </div>
+        <div class="bloco-body">
+          <div class="obs-label">Execução</div>
+          <div class="obs-text">${obsFormatted}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Workout label
+  const workoutLabels = {
+    A: 'Treino A — Peito · Ombros · Tríceps',
+    B: 'Treino B — Pernas · Glúteos',
+    C: 'Treino C — Costas · Bíceps',
+    D: 'Treino D — Pernas · Glúteos (variação)'
+  };
+
+  const content = document.getElementById('mainContent');
+
+  // Append below the tabs/banner
+  const existing = content.querySelectorAll('.warmup-section, .run-badge, .exercises-container, .section-label, .guide-toggle, .guide-content, .saturday-card, .saturday-section');
+  existing.forEach(el => el.remove());
+
+  // Warmup
+  const warmupEl = document.createElement('div');
+  warmupEl.className = 'warmup-section';
+  warmupEl.innerHTML = `
+    <div class="warmup-title">🔥 Aquecimento — ${workoutLabels[currentWorkout]}</div>
+    <ul class="warmup-items">${warmupItems.map(i=>`<li>${i}</li>`).join('')}</ul>
+  `;
+  content.appendChild(warmupEl);
+
+  // (run cards moved to Corrida tab)
+
+  // Section label
+  const labelEl = document.createElement('div');
+  labelEl.className = 'section-label';
+  labelEl.textContent = workoutLabels[currentWorkout] + ' · Semana ' + currentWeek;
+  content.appendChild(labelEl);
+
+  // Cards
+  const cardsEl = document.createElement('div');
+  cardsEl.className = 'exercises-container';
+  const done = isDone(currentWeek, currentWorkout);
+  const doneDate = getDoneDate(currentWeek, currentWorkout);
+  const workoutShort = {A:'Treino A',B:'Treino B',C:'Treino C',D:'Treino D'}[currentWorkout];
+  cardsEl.innerHTML = cardsHTML + `
+    <button class="done-btn${done ? ' is-done' : ''}" onclick="toggleComplete(${currentWeek}, '${currentWorkout}')">
+      <span class="done-icon">${done ? '✓' : '○'}</span>
+      ${done
+        ? `${workoutShort} Concluído <span class="done-date">· ${doneDate}</span>`
+        : `Marcar ${workoutShort} como Concluído`}
+    </button>
+  `;
+  content.appendChild(cardsEl);
+
+  // Guide toggle
+  const guideToggle = document.createElement('div');
+  guideToggle.className = 'guide-toggle';
+  guideToggle.id = 'guideToggle';
+  guideToggle.innerHTML = `<div class="guide-toggle-label">📖 Guia de Execução Completo</div><div class="guide-toggle-icon">▾</div>`;
+  guideToggle.onclick = () => {
+    guideToggle.classList.toggle('open');
+    document.getElementById('guideContent').classList.toggle('open');
+  };
+  content.insertBefore(guideToggle, cardsEl);
+
+  const guideCont = document.createElement('div');
+  guideCont.className = 'guide-content';
+  guideCont.id = 'guideContent';
+  guideCont.innerHTML = guideHTML;
+  content.insertBefore(guideCont, cardsEl);
+
+}
+
+// ─────────────────────────────────────────
+// RENDER RUN VIEW
+// ─────────────────────────────────────────
+function renderRunView(wk, phase) {
+  const content = document.getElementById('mainContent');
+  const existing = content.querySelectorAll('.warmup-section, .run-badge, .exercises-container, .section-label, .guide-toggle, .guide-content, .saturday-card, .saturday-section, .run-view');
+  existing.forEach(el => el.remove());
+
+  const view = document.createElement('div');
+  view.className = 'run-view';
+
+  const phaseLabel = {base:'Base', consol:'Consolidação', alvo:'Alvo'}[phase];
+
+  view.innerHTML = `
+    <div class="run-session-label">3ª Feira — Pós Treino A</div>
+    ${buildRunCard(wk.runA)}
+
+    <div class="run-session-label">5ª Feira — Pós Treino C</div>
+    ${buildRunCard(wk.runC)}
+
+    <div class="run-session-label">${wk.runSat.prova ? 'Domingo' : 'Sábado'} — Corrida Solo</div>
+    ${buildRunCard(wk.runSat)}
+
+    <div class="run-zones-ref">
+      <div class="run-zones-title">📊 Referência de Zonas — FC Máx</div>
+      <div class="run-zones-grid">
+        <div class="run-zone-row"><span class="run-zone-pill z1" style="background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)">Z1</span> 50–59% FCmáx · Recuperação</div>
+        <div class="run-zone-row"><span class="run-zone-pill z2" style="background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)">Z2</span> 60–69% FCmáx · Aeróbio leve</div>
+        <div class="run-zone-row"><span class="run-zone-pill z3" style="background:rgba(52,211,153,.2);color:#34d399;border:1px solid rgba(52,211,153,.4)">Z3</span> 70–79% FCmáx · Limiar moderado</div>
+        <div class="run-zone-row"><span class="run-zone-pill z4" style="background:rgba(251,146,60,.2);color:#fb923c;border:1px solid rgba(251,146,60,.4)">Z4</span> 80–89% FCmáx · Anaeróbio</div>
+      </div>
+    </div>
+  `;
+
+  // Done button for run tab
+  const runDone = isDone(currentWeek, 'R');
+  const runDoneDate = getDoneDate(currentWeek, 'R');
+  const runDoneHTML = `
+    <button class="done-btn${runDone ? ' is-done' : ''}" onclick="toggleComplete(${currentWeek}, 'R')" style="margin:16px 0 0">
+      <span class="done-icon">${runDone ? '✓' : '○'}</span>
+      ${runDone
+        ? `Corridas da Semana ${currentWeek} Concluídas <span class="done-date">· ${runDoneDate}</span>`
+        : `Marcar Corridas da Semana ${currentWeek} como Concluídas`}
+    </button>
+  `;
+  const doneEl = document.createElement('div');
+  doneEl.innerHTML = runDoneHTML;
+  view.appendChild(doneEl.firstElementChild);
+
+  content.appendChild(view);
+}
+
+function toggleCard(idx) {
+  const card = document.getElementById('card-' + idx);
+  card.classList.toggle('open');
+}
+
+// ─────────────────────────────────────────
+// BUILD RUN CARD
+// ─────────────────────────────────────────
+function buildRunCard(run) {
+  if (!run) return '';
+
+  if (run.descanso) {
+    return `<div class="run-card">
+      <div class="run-card-header">
+        <div class="run-day-badge">😴 ${run.dia}</div>
+        <div class="run-tipo">Descanso</div>
+      </div>
+      <div class="run-descanso">Dia de descanso — sem corrida</div>
+    </div>`;
+  }
+
+  if (run.prova) {
+    return `<div class="run-card" style="border-color:rgba(251,146,60,.4);background:rgba(251,146,60,.06)">
+      <div class="run-card-header" style="background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.2)">
+        <div class="run-day-badge" style="color:#fb923c">🏆 ${run.dia}</div>
+        <div class="run-tipo" style="color:#fb923c;background:rgba(251,146,60,.12);border-color:rgba(251,146,60,.3)">PROVA ALVO</div>
+      </div>
+      <div class="run-prova">
+        <div class="run-prova-title">🏃 5 KM — Prova Alvo</div>
+        <div class="run-prova-sub">Aquecimento Z1 · Prova em Z4 · Desaquecimento Z1</div>
+      </div>
+      ${buildSeqBlocks(run.seq)}
+    </div>`;
+  }
+
+  return `<div class="run-card">
+    <div class="run-card-header">
+      <div class="run-day-badge">🏃 ${run.dia}</div>
+      <div class="run-tipo">${run.tipo}</div>
+    </div>
+    ${buildSeqBlocks(run.seq)}
+  </div>`;
+}
+
+function buildSeqBlocks(seq) {
+  if (!seq || seq.length === 0) return '';
+  let html = '<div class="run-seq">';
+  seq.forEach((blk, i) => {
+    const zc = blk.z.toLowerCase();
+    const countLabel = blk.n > 1 ? `${blk.n}x` : '&nbsp;';
+    html += `<div class="run-block">
+      <div class="run-count">${countLabel}</div>
+      <div class="run-zone ${zc}">${blk.z}</div>
+      <div class="run-time">${blk.t}</div>
+    </div>`;
+    if (i < seq.length - 1) {
+      html += `<div class="run-block-sep">+</div>`;
+    }
+  });
+  html += '</div>';
+  return html;
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+renderAll();
+</script>
+</body>
+</html>
