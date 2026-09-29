@@ -582,24 +582,43 @@
     margin-bottom: 8px;
   }
   .run-zones-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 6px;
   }
   .run-zone-row {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 10px;
     font-size: 11px;
     color: var(--text-dim);
   }
   .run-zone-pill {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
-    padding: 2px 7px;
-    border-radius: 4px;
-    min-width: 28px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    min-width: 32px;
     text-align: center;
+    flex-shrink: 0;
+  }
+  .run-zone-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .run-zone-bpm {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .run-zone-pct {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .run-zone-name {
+    font-size: 11px;
+    color: var(--text-dim);
   }
 
   /* ── COMPLETION ── */
@@ -1543,12 +1562,48 @@ function renderRunView(wk, phase) {
     ${buildRunCard(wk.runSat)}
 
     <div class="run-zones-ref">
-      <div class="run-zones-title">📊 Referência de Zonas — FC Máx</div>
+      <div class="run-zones-title">📊 Zonas de FC — FCmáx: 179 bpm</div>
       <div class="run-zones-grid">
-        <div class="run-zone-row"><span class="run-zone-pill z1" style="background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)">Z1</span> 50–59% FCmáx · Recuperação</div>
-        <div class="run-zone-row"><span class="run-zone-pill z2" style="background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)">Z2</span> 60–69% FCmáx · Aeróbio leve</div>
-        <div class="run-zone-row"><span class="run-zone-pill z3" style="background:rgba(52,211,153,.2);color:#34d399;border:1px solid rgba(52,211,153,.4)">Z3</span> 70–79% FCmáx · Limiar moderado</div>
-        <div class="run-zone-row"><span class="run-zone-pill z4" style="background:rgba(251,146,60,.2);color:#fb923c;border:1px solid rgba(251,146,60,.4)">Z4</span> 80–89% FCmáx · Anaeróbio</div>
+        <div class="run-zone-row">
+          <span class="run-zone-pill z5" style="background:rgba(239,68,68,.2);color:#ef4444;border:1px solid rgba(239,68,68,.4)">Z5</span>
+          <div class="run-zone-info">
+            <span class="run-zone-bpm">160–179 bpm</span>
+            <span class="run-zone-pct">90–100%</span>
+            <span class="run-zone-name">Máxima — desempenho e velocidade</span>
+          </div>
+        </div>
+        <div class="run-zone-row">
+          <span class="run-zone-pill z4" style="background:rgba(251,146,60,.2);color:#fb923c;border:1px solid rgba(251,146,60,.4)">Z4</span>
+          <div class="run-zone-info">
+            <span class="run-zone-bpm">142–159 bpm</span>
+            <span class="run-zone-pct">80–90%</span>
+            <span class="run-zone-name">Difícil — capacidade máxima</span>
+          </div>
+        </div>
+        <div class="run-zone-row">
+          <span class="run-zone-pill z3" style="background:rgba(52,211,153,.2);color:#34d399;border:1px solid rgba(52,211,153,.4)">Z3</span>
+          <div class="run-zone-info">
+            <span class="run-zone-bpm">124–141 bpm</span>
+            <span class="run-zone-pct">70–80%</span>
+            <span class="run-zone-name">Moderada — capacidade aeróbica</span>
+          </div>
+        </div>
+        <div class="run-zone-row">
+          <span class="run-zone-pill z2" style="background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)">Z2</span>
+          <div class="run-zone-info">
+            <span class="run-zone-bpm">106–123 bpm</span>
+            <span class="run-zone-pct">60–70%</span>
+            <span class="run-zone-name">Leve — resistência e queima de gordura</span>
+          </div>
+        </div>
+        <div class="run-zone-row">
+          <span class="run-zone-pill z1" style="background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)">Z1</span>
+          <div class="run-zone-info">
+            <span class="run-zone-bpm">90–105 bpm</span>
+            <span class="run-zone-pct">50–60%</span>
+            <span class="run-zone-name">Muito leve — recuperação física</span>
+          </div>
+        </div>
       </div>
     </div>
   `;
