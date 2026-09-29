@@ -461,6 +461,80 @@
   }
   .obs-text .warn { color: #fbbf24; }
 
+  /* ── REST TIMER ── */
+  .rest-timer {
+    margin-top: 14px;
+    padding: 12px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rest-timer-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .rest-presets { display: flex; gap: 6px; }
+  .rest-preset {
+    flex: 1;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 0;
+    cursor: pointer;
+  }
+  .rest-preset.active {
+    background: rgba(59,130,246,.15);
+    border-color: #3B82F6;
+    color: #60a5fa;
+  }
+  .rest-display { display: flex; align-items: center; gap: 10px; }
+  .rest-count {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text);
+    min-width: 64px;
+    letter-spacing: -1px;
+  }
+  .rest-count.running { color: #34d399; }
+  .rest-count.done { color: #fb923c; }
+  .rest-progress {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .rest-fill {
+    height: 100%;
+    background: var(--base);
+    border-radius: 3px;
+    transition: width .9s linear;
+  }
+  .rest-fill.running { background: #34d399; }
+  .rest-fill.done { background: #fb923c; }
+  .rest-go {
+    width: 100%;
+    padding: 9px;
+    border-radius: 8px;
+    border: 1px solid #3B82F6;
+    background: rgba(59,130,246,.12);
+    color: #60a5fa;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .rest-go.running { border-color: #ef4444; background: rgba(239,68,68,.12); color: #f87171; }
+  .rest-go.done { border-color: #34d399; background: rgba(52,211,153,.12); color: #34d399; }
+
   /* Saturday run card */
   .saturday-card {
     background: rgba(16,185,129,.07);
@@ -1467,6 +1541,19 @@ function renderWorkout() {
         <div class="bloco-body">
           <div class="obs-label">Execução</div>
           <div class="obs-text">${obsFormatted}</div>
+          <div class="rest-timer" id="timer-${idx}">
+            <div class="rest-timer-label">⏱ Descanso entre séries</div>
+            <div class="rest-presets">
+              <button class="rest-preset active" onclick="setRestTime(${idx}, 60, this)">60s</button>
+              <button class="rest-preset" onclick="setRestTime(${idx}, 90, this)">90s</button>
+              <button class="rest-preset" onclick="setRestTime(${idx}, 120, this)">2 min</button>
+            </div>
+            <div class="rest-display">
+              <div class="rest-count" id="rcount-${idx}">1:00</div>
+              <div class="rest-progress"><div class="rest-fill" id="rfill-${idx}" style="width:100%"></div></div>
+            </div>
+            <button class="rest-go" id="rbtn-${idx}" onclick="toggleRest(${idx})">▶ Iniciar descanso</button>
+          </div>
         </div>
       </div>
     `;
@@ -1687,6 +1774,78 @@ function buildSeqBlocks(seq) {
   });
   html += '</div>';
   return html;
+}
+
+// ─────────────────────────────────────────
+// REST TIMER
+// ─────────────────────────────────────────
+const restState = {};
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return m > 0 ? m + ':' + String(sec).padStart(2, '0') : s + 's';
+}
+
+function setRestTime(idx, secs, el) {
+  const st = restState[idx];
+  if (st && st.state === 'running') return;
+  restState[idx] = { total: secs, remaining: secs, state: 'idle', interval: null };
+  el.closest('.rest-presets').querySelectorAll('.rest-preset').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  updateRestUI(idx);
+}
+
+function toggleRest(idx) {
+  if (!restState[idx]) restState[idx] = { total: 60, remaining: 60, state: 'idle', interval: null };
+  const st = restState[idx];
+
+  if (st.state === 'running') {
+    clearInterval(st.interval);
+    st.state = 'idle';
+    st.remaining = st.total;
+  } else {
+    if (st.state === 'done') st.remaining = st.total;
+    st.state = 'running';
+    st.interval = setInterval(() => {
+      st.remaining--;
+      if (st.remaining <= 0) {
+        st.remaining = 0;
+        clearInterval(st.interval);
+        st.state = 'done';
+        try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA').play(); } catch(e) {}
+      }
+      updateRestUI(idx);
+    }, 1000);
+  }
+  updateRestUI(idx);
+}
+
+function updateRestUI(idx) {
+  const st = restState[idx];
+  if (!st) return;
+  const cnt = document.getElementById('rcount-' + idx);
+  const fill = document.getElementById('rfill-' + idx);
+  const btn = document.getElementById('rbtn-' + idx);
+  if (!cnt) return;
+
+  const pct = (st.remaining / st.total) * 100;
+  cnt.textContent = fmtTime(st.remaining);
+  fill.style.width = pct + '%';
+
+  cnt.className = 'rest-count' + (st.state === 'running' ? ' running' : st.state === 'done' ? ' done' : '');
+  fill.className = 'rest-fill' + (st.state === 'running' ? ' running' : st.state === 'done' ? ' done' : '');
+
+  if (st.state === 'running') {
+    btn.className = 'rest-go running';
+    btn.textContent = '⏹ Pausar';
+  } else if (st.state === 'done') {
+    btn.className = 'rest-go done';
+    btn.textContent = '✓ Descansado! Reiniciar';
+  } else {
+    btn.className = 'rest-go';
+    btn.textContent = '▶ Iniciar descanso';
+  }
 }
 
 // ─────────────────────────────────────────
